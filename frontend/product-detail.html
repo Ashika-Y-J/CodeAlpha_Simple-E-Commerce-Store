@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details | ShopSphere</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="container">
+      <span>🚀 Flash Sale: Use code <span class="highlight">SPHERE20</span> for 20% off all orders over $50! | Free Express Shipping</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-main">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon"><i class="fa-solid fa-shapes"></i></div>
+          <span>Shop<span class="sphere">Sphere</span></span>
+        </a>
+
+        <!-- Search Form -->
+        <div class="header-search">
+          <form action="products.html" method="GET" class="search-form">
+            <select name="category" id="nav-search-category" class="search-category-select">
+              <option value="">All Categories</option>
+            </select>
+            <input type="text" name="q" class="search-input" placeholder="Search for electronics, fashion, headphones..." required>
+            <button type="submit" class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+          </form>
+        </div>
+
+        <!-- Actions -->
+        <div class="header-actions">
+          <div id="navbar-auth-section">
+            <a href="login.html" class="action-link"><i class="fa-regular fa-user"></i><span>Sign In</span></a>
+          </div>
+          <a href="cart.html" class="action-link" title="Shopping Cart">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="badge-counter cart-badge">0</span>
+          </a>
+          <button class="mobile-menu-toggle"><i class="fa-solid fa-bars"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Nav Strip -->
+    <nav class="category-nav">
+      <div class="container">
+        <div class="category-nav-inner" id="category-nav-items"></div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container" id="product-detail-container" style="padding-top: 1.5rem; padding-bottom: 3.5rem;">
+      <div style="text-align: center; padding: 4rem;">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2.5rem; color: var(--primary);"></i>
+        <p style="margin-top: 1rem; color: var(--gray-500);">Loading product details...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>&copy; 2026 ShopSphere Store Inc. All rights reserved.</span>
+        <div style="display: flex; gap: 1.5rem; font-size: 1.25rem; color: #94a3b8;">
+          <i class="fa-brands fa-cc-visa"></i>
+          <i class="fa-brands fa-cc-mastercard"></i>
+          <i class="fa-brands fa-cc-paypal"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const slug = urlParams.get('slug');
+
+      if (!slug) {
+        window.location.href = 'products.html';
+        return;
+      }
+
+      const data = await API.getProductDetail(slug);
+      const container = document.getElementById('product-detail-container');
+
+      if (!data || !data.product) {
+        container.innerHTML = `
+          <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 4rem 2rem; text-align: center;">
+            <i class="fa-solid fa-circle-exclamation" style="font-size: 3rem; color: var(--danger); margin-bottom: 1rem;"></i>
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--gray-800);">Product Not Found</h2>
+            <p style="color: var(--gray-500); margin: 0.5rem 0 1.5rem;">The product you are looking for may have been removed or is unavailable.</p>
+            <a href="products.html" class="btn btn-primary">Return to Catalog</a>
+          </div>
+        `;
+        return;
+      }
+
+      const p = data.product;
+      const related = data.related_products || [];
+
+      // Render product
+      container.innerHTML = `
+        <!-- Breadcrumbs -->
+        <div style="font-size: 0.85rem; color: var(--gray-500); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+          <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+          <span>/</span>
+          <a href="products.html">Catalog</a>
+          <span>/</span>
+          <a href="products.html?category=${p.category_slug}">${p.category_name}</a>
+          <span>/</span>
+          <span style="color: var(--gray-800); font-weight: 600;">${p.name}</span>
+        </div>
+
+        <div class="product-detail-grid">
+          <!-- Gallery -->
+          <div class="detail-gallery">
+            <div class="main-image-wrap">
+              <img id="main-product-img" src="${p.image}" alt="${p.name}">
+            </div>
+            <div class="gallery-thumbs" id="gallery-thumbs">
+              <div class="thumb-item active" data-img="${p.image}">
+                <img src="${p.image}" alt="${p.name} thumbnail">
+              </div>
+              ${(p.gallery_images || []).map(g => `
+                <div class="thumb-item" data-img="${g.display_image}">
+                  <img src="${g.display_image}" alt="gallery">
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Product Details -->
+          <div class="detail-info">
+            ${p.brand ? `<div class="detail-brand">${p.brand}</div>` : ''}
+            <h1 class="detail-title">${p.name}</h1>
+
+            <div class="product-rating" style="margin-bottom: 1.25rem;">
+              <div class="stars" style="font-size: 1rem;">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+              </div>
+              <span class="rating-count" style="font-size: 0.9rem; font-weight: 600;">${p.rating}</span>
+              <span style="color: var(--gray-400);">•</span>
+              <span style="color: var(--primary); font-size: 0.85rem; font-weight: 600;">${p.reviews_count} reviews</span>
+            </div>
+
+            <div class="detail-price-box">
+              <span class="detail-price">$${p.price}</span>
+              ${p.old_price ? `<span class="detail-old-price">$${p.old_price}</span><span class="discount-tag">Save ${p.discount_percent}%</span>` : ''}
+            </div>
+
+            <div class="stock-status">
+              ${p.in_stock ? `
+                <i class="fa-solid fa-circle-check" style="color: var(--success);"></i>
+                <span class="in-stock">In Stock (${p.stock} units available)</span>
+              ` : `
+                <i class="fa-solid fa-circle-xmark" style="color: var(--danger);"></i>
+                <span class="out-of-stock">Out of Stock</span>
+              `}
+            </div>
+
+            <p style="color: var(--gray-600); line-height: 1.6; margin-bottom: 1.75rem; font-size: 0.95rem;">
+              ${p.short_description || p.description.substring(0, 160) + '...'}
+            </p>
+
+            ${p.in_stock ? `
+              <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <span style="font-size: 0.9rem; font-weight: 600; color: var(--gray-700);">Quantity:</span>
+                <div class="quantity-control">
+                  <button type="button" class="qty-btn" id="btn-qty-minus"><i class="fa-solid fa-minus"></i></button>
+                  <input type="number" id="input-qty" class="qty-input" value="1" min="1" max="${p.stock}">
+                  <button type="button" class="qty-btn" id="btn-qty-plus"><i class="fa-solid fa-plus"></i></button>
+                </div>
+              </div>
+
+              <div class="detail-actions">
+                <button type="button" class="btn btn-primary btn-lg" id="btn-add-cart" style="flex: 1;">
+                  <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+                </button>
+                <button type="button" class="btn btn-secondary btn-lg" id="btn-buy-now">
+                  Buy Now
+                </button>
+              </div>
+            ` : ''}
+
+            <!-- Trust badges -->
+            <div style="margin-top: 2rem; padding: 1.25rem; background: var(--gray-100); border-radius: var(--radius-md); display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.85rem; color: var(--gray-700);">
+              <div style="display: flex; align-items: center; gap: 0.65rem;"><i class="fa-solid fa-truck" style="color: var(--primary);"></i> Free delivery over $50</div>
+              <div style="display: flex; align-items: center; gap: 0.65rem;"><i class="fa-solid fa-rotate-left" style="color: var(--primary);"></i> 30-Day returns</div>
+              <div style="display: flex; align-items: center; gap: 0.65rem;"><i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> 2-Year warranty</div>
+              <div style="display: flex; align-items: center; gap: 0.65rem;"><i class="fa-solid fa-lock" style="color: var(--primary);"></i> Secure checkout</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <section class="detail-tabs-section">
+          <div class="tabs-nav">
+            <button class="tab-btn active" data-tab="tab-desc">Description</button>
+            <button class="tab-btn" data-tab="tab-specs">Specifications</button>
+            <button class="tab-btn" data-tab="tab-reviews">Customer Reviews (${(p.reviews || []).length})</button>
+          </div>
+
+          <div class="tab-content active" id="tab-desc">
+            <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.75rem;">Product Overview</h3>
+            <p style="color: var(--gray-700); line-height: 1.8; font-size: 0.95rem;">${p.description}</p>
+          </div>
+
+          <div class="tab-content" id="tab-specs">
+            <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">Technical Specifications</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 0.75rem 0; font-weight: 600; color: var(--gray-600); width: 200px;">Brand</td><td style="padding: 0.75rem 0;">${p.brand || 'ShopSphere Select'}</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 0.75rem 0; font-weight: 600; color: var(--gray-600);">Category</td><td style="padding: 0.75rem 0;">${p.category_name}</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 0.75rem 0; font-weight: 600; color: var(--gray-600);">Stock Inventory</td><td style="padding: 0.75rem 0;">${p.stock} units</td></tr>
+                <tr><td style="padding: 0.75rem 0; font-weight: 600; color: var(--gray-600);">Dispatch Window</td><td style="padding: 0.75rem 0;">24-48 business hours</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tab-content" id="tab-reviews">
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem;">
+              <div>
+                <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1.25rem;">Reviews</h3>
+                <div id="reviews-list">
+                  ${(p.reviews && p.reviews.length > 0) ? p.reviews.map(r => `
+                    <div class="review-item">
+                      <div class="review-header">
+                        <span class="reviewer-name">${r.user_full_name || r.username}</span>
+                        <span class="review-date">${new Date(r.created_at).toLocaleDateString()}</span>
+                      </div>
+                      <div class="stars" style="font-size: 0.8rem; margin-bottom: 0.5rem;">
+                        ${Array.from({ length: 5 }).map((_, i) => `<i class="fa-${i < r.rating ? 'solid' : 'regular'} fa-star"></i>`).join('')}
+                      </div>
+                      ${r.title ? `<h4 style="font-size: 0.95rem; font-weight: 700; color: var(--gray-800); margin-bottom: 0.25rem;">${r.title}</h4>` : ''}
+                      <p style="color: var(--gray-600); font-size: 0.9rem; line-height: 1.6;">${r.comment}</p>
+                    </div>
+                  `).join('') : '<p style="color: var(--gray-500); font-style: italic;">No reviews yet. Be the first to share your thoughts!</p>'}
+                </div>
+              </div>
+
+              <!-- Submit Review Form -->
+              <div style="background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.75rem;">
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">Leave a Review</h3>
+                <form id="review-form">
+                  <div class="form-group">
+                    <label class="form-label">Rating</label>
+                    <select id="review-rating" class="form-select" required>
+                      <option value="5">⭐⭐⭐⭐⭐ (5 - Outstanding)</option>
+                      <option value="4">⭐⭐⭐⭐ (4 - Very Good)</option>
+                      <option value="3">⭐⭐⭐ (3 - Average)</option>
+                      <option value="2">⭐⭐ (2 - Below Average)</option>
+                      <option value="1">⭐ (1 - Disappointing)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Review Headline</label>
+                    <input type="text" id="review-title" class="form-input" placeholder="e.g. Highly recommend this!" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Review Comment</label>
+                    <textarea id="review-comment" rows="4" class="form-input" placeholder="Share your experience with this item..." required></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fa-solid fa-paper-plane"></i> Submit Review
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Related Products -->
+        ${related.length > 0 ? `
+          <section class="section-padding">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title">Related Items</h2>
+                <p class="section-subtitle">More curated selections from ${p.category_name}.</p>
+              </div>
+            </div>
+            <div class="products-grid">
+              ${related.map(r => renderProductCard(r)).join('')}
+            </div>
+          </section>
+        ` : ''}
+      `;
+
+      // Gallery thumbnail click handler
+      document.querySelectorAll('.thumb-item').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+          thumb.classList.add('active');
+          const mainImg = document.getElementById('main-product-img');
+          mainImg.style.opacity = '0.3';
+          setTimeout(() => {
+            mainImg.src = thumb.dataset.img;
+            mainImg.style.opacity = '1';
+          }, 150);
+        });
+      });
+
+      // Quantity controls
+      const qtyMinus = document.getElementById('btn-qty-minus');
+      const qtyPlus = document.getElementById('btn-qty-plus');
+      const qtyInput = document.getElementById('input-qty');
+      if (qtyMinus && qtyPlus && qtyInput) {
+        qtyMinus.addEventListener('click', () => {
+          let val = parseInt(qtyInput.value) || 1;
+          if (val > 1) qtyInput.value = val - 1;
+        });
+        qtyPlus.addEventListener('click', () => {
+          let val = parseInt(qtyInput.value) || 1;
+          if (val < p.stock) qtyInput.value = val + 1;
+        });
+      }
+
+      // Add to Cart
+      const addCartBtn = document.getElementById('btn-add-cart');
+      if (addCartBtn) {
+        addCartBtn.addEventListener('click', () => {
+          const qty = parseInt(qtyInput.value) || 1;
+          API.addToCart(p, qty);
+          showToast(`"${p.name}" (Qty: ${qty}) added to cart!`, 'success');
+        });
+      }
+
+      // Buy Now
+      const buyNowBtn = document.getElementById('btn-buy-now');
+      if (buyNowBtn) {
+        buyNowBtn.addEventListener('click', () => {
+          const qty = parseInt(qtyInput.value) || 1;
+          API.addToCart(p, qty);
+          window.location.href = 'checkout.html';
+        });
+      }
+
+      // Tabs switching
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById(btn.dataset.tab).classList.add('active');
+        });
+      });
+
+      // Review submission
+      const reviewForm = document.getElementById('review-form');
+      if (reviewForm) {
+        reviewForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const reviewData = {
+            rating: document.getElementById('review-rating').value,
+            title: document.getElementById('review-title').value,
+            comment: document.getElementById('review-comment').value,
+          };
+          const res = await API.submitReview(slug, reviewData);
+          if (res.success) {
+            showToast('Review submitted successfully!', 'success');
+            setTimeout(() => location.reload(), 1000);
+          } else {
+            showToast(res.error || 'Failed to submit review', 'danger');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+

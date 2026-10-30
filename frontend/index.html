@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopSphere | Discover Premium Products Everyday</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="container">
+      <span>🚀 Flash Sale: Use code <span class="highlight">SPHERE20</span> for 20% off all orders over $50! | Free Express Shipping</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-main">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon"><i class="fa-solid fa-shapes"></i></div>
+          <span>Shop<span class="sphere">Sphere</span></span>
+        </a>
+
+        <!-- Search Form -->
+        <div class="header-search">
+          <form action="products.html" method="GET" class="search-form">
+            <select name="category" id="nav-search-category" class="search-category-select">
+              <option value="">All Categories</option>
+            </select>
+            <input type="text" name="q" class="search-input" placeholder="Search for electronics, fashion, headphones..." required>
+            <button type="submit" class="search-btn" title="Search ShopSphere">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- Actions -->
+        <div class="header-actions">
+          <div id="navbar-auth-section">
+            <a href="login.html" class="action-link"><i class="fa-regular fa-user"></i><span>Sign In</span></a>
+          </div>
+          <a href="cart.html" class="action-link" title="Shopping Cart">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="badge-counter cart-badge">0</span>
+          </a>
+          <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Nav Strip -->
+    <nav class="category-nav">
+      <div class="container">
+        <div class="category-nav-inner" id="category-nav-items">
+          <!-- Populated dynamically via main.js -->
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero Banner -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="hero-tag"><i class="fa-solid fa-sparkles"></i> Curated Premium Collection 2026</div>
+            <h1 class="hero-title">Elevate Your Lifestyle With <span>Next-Gen Products</span></h1>
+            <p class="hero-desc">Explore award-winning electronics, timeless fashion, and minimalist home essentials. Crafted for those who appreciate premium quality and effortless design.</p>
+            <div class="hero-cta">
+              <a href="products.html" class="btn btn-primary btn-lg"><i class="fa-solid fa-bag-shopping"></i> Explore Collection</a>
+              <a href="#featured-products" class="btn btn-outline btn-lg"><i class="fa-solid fa-fire"></i> Featured Deals</a>
+            </div>
+          </div>
+          <div class="hero-image-wrap">
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80" alt="ShopSphere Luxury Collection" class="hero-image">
+            <div class="hero-floating-badge">
+              <div class="hero-badge-icon"><i class="fa-solid fa-certificate"></i></div>
+              <div>
+                <div style="font-weight: 800; color: var(--gray-900); font-size: 1rem;">100% Authentic</div>
+                <div style="font-size: 0.8rem; color: var(--gray-500);">Verified brand partners</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Strip -->
+    <div class="features-strip">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-box">
+            <div class="feature-icon-box"><i class="fa-solid fa-truck-fast"></i></div>
+            <div><div class="feature-title">Free Express Shipping</div><div class="feature-sub">On all orders over $50.00</div></div>
+          </div>
+          <div class="feature-box">
+            <div class="feature-icon-box"><i class="fa-solid fa-shield-halved"></i></div>
+            <div><div class="feature-title">Secure Payments</div><div class="feature-sub">256-bit SSL encrypted checkout</div></div>
+          </div>
+          <div class="feature-box">
+            <div class="feature-icon-box"><i class="fa-solid fa-rotate-left"></i></div>
+            <div><div class="feature-title">30-Day Free Returns</div><div class="feature-sub">Hassle-free refund policy</div></div>
+          </div>
+          <div class="feature-box">
+            <div class="feature-icon-box"><i class="fa-solid fa-headset"></i></div>
+            <div><div class="feature-title">24/7 Priority Support</div><div class="feature-sub">Live assistance anytime</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Categories -->
+    <section class="section-padding">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Shop by Category</h2>
+            <p class="section-subtitle">Find exactly what you need across our handpicked departments.</p>
+          </div>
+          <a href="products.html" class="btn btn-outline btn-sm">View All <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="categories-grid" id="home-categories-grid">
+          <!-- Dynamically populated from API -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="section-padding" id="featured-products" style="background: var(--white); border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200);">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Featured Products</h2>
+            <p class="section-subtitle">Top-rated items loved by thousands of happy customers.</p>
+          </div>
+          <a href="products.html" class="btn btn-outline btn-sm">Browse Catalog <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="products-grid" id="featured-products-grid">
+          <!-- Dynamically populated from API -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Promo Banner -->
+    <section class="container">
+      <div class="deal-banner">
+        <div>
+          <span class="deal-tag"><i class="fa-solid fa-bolt"></i> LIMITED TIME OFFER</span>
+          <h2 class="deal-title">Save Up to 35% On Premium Noise-Cancelling Audio</h2>
+          <p class="deal-desc">Immerse yourself in crystal acoustics. Equipped with ultra-fast spatial Bluetooth 5.3, ambient transparency, and 45-hour extended battery life.</p>
+          <a href="products.html?category=audio-headphones" class="btn btn-accent btn-lg">Claim Offer Now <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div style="text-align: center;">
+          <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=700&q=80" alt="Audio Deal" style="border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); max-height: 280px; width: auto; margin: 0 auto;">
+        </div>
+      </div>
+    </section>
+
+    <!-- New Arrivals -->
+    <section class="section-padding">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">New Arrivals</h2>
+            <p class="section-subtitle">Freshly dropped gear and apparel added this week.</p>
+          </div>
+          <a href="products.html?sort=newest" class="btn btn-outline btn-sm">See All New <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="products-grid" id="new-arrivals-grid">
+          <!-- Dynamically populated from API -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-title">
+            <div class="brand-icon" style="width: 32px; height: 32px; font-size: 1rem;"><i class="fa-solid fa-shapes"></i></div>
+            <span>ShopSphere</span>
+          </div>
+          <p class="footer-desc">ShopSphere delivers exceptional shopping experiences with curated collections, lightning-fast fulfillment, and 24/7 dedicated customer support.</p>
+          <div class="social-links">
+            <a href="#" class="social-icon"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="social-icon"><i class="fa-brands fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4 class="footer-heading">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">All Products</a></li>
+            <li><a href="cart.html">Shopping Cart</a></li>
+            <li><a href="profile.html">My Account</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-heading">Architecture</h4>
+          <ul class="footer-links">
+            <li><a href="http://127.0.0.1:8000/api/products/" target="_blank">Django REST API</a></li>
+            <li><a href="http://127.0.0.1:8000/admin/" target="_blank">Django Admin</a></li>
+            <li><a href="checkout.html">Checkout Flow</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-heading">Frontend & Backend</h4>
+          <p class="footer-desc">Frontend client built with modern HTML5, CSS3 & JavaScript communicating via REST with the Django 5 backend.</p>
+          <div style="margin-top: 1rem; color: #cbd5e1; font-size: 0.85rem;">
+            <i class="fa-solid fa-shield-halved" style="color: var(--accent);"></i> 100% Secure Checkout Guarantee
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 ShopSphere Store Inc. All rights reserved.</span>
+        <div style="display: flex; gap: 1.5rem; font-size: 1.25rem; color: #94a3b8;">
+          <i class="fa-brands fa-cc-visa"></i>
+          <i class="fa-brands fa-cc-mastercard"></i>
+          <i class="fa-brands fa-cc-amex"></i>
+          <i class="fa-brands fa-cc-paypal"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Load Categories
+      const categories = await API.getCategories();
+      const catContainer = document.getElementById('home-categories-grid');
+      if (catContainer) {
+        catContainer.innerHTML = categories.map(c => `
+          <a href="products.html?category=${c.slug}" class="category-card">
+            <div class="category-icon"><i class="fa-solid ${c.icon || 'fa-tag'}"></i></div>
+            <span class="category-card-name">${c.name}</span>
+            <span style="font-size: 0.775rem; color: var(--gray-400);">${c.products_count || 0} items</span>
+          </a>
+        `).join('');
+      }
+
+      // 2. Load Featured Products
+      const featuredData = await API.getProducts({ featured: 'true', limit: 8 });
+      const featContainer = document.getElementById('featured-products-grid');
+      if (featContainer) {
+        featContainer.innerHTML = featuredData.results.map(p => renderProductCard(p)).join('');
+      }
+
+      // 3. Load New Arrivals
+      const newArrivalsData = await API.getProducts({ sort: 'newest', limit: 8 });
+      const newContainer = document.getElementById('new-arrivals-grid');
+      if (newContainer) {
+        newContainer.innerHTML = newArrivalsData.results.map(p => renderProductCard(p)).join('');
+      }
+    });
+  </script>
+</body>
+</html>
+

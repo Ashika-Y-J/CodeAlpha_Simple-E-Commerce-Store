@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | ShopSphere{% endblock %}
+
+{% block content %}
+<div class="container">
+  
+  <!-- Breadcrumbs -->
+  <div style="padding: 1.25rem 0 0.5rem; font-size: 0.85rem; color: var(--gray-500); display: flex; align-items: center; gap: 0.5rem;">
+    <a href="{% url 'store:home' %}"><i class="fa-solid fa-house"></i> Home</a>
+    <span>/</span>
+    <a href="{% url 'store:product_list' %}">Catalog</a>
+    <span>/</span>
+    <a href="{% url 'store:product_list_by_category' product.category.slug %}">{{ product.category.name }}</a>
+    <span>/</span>
+    <span style="color: var(--gray-800); font-weight: 600;">{{ product.name }}</span>
+  </div>
+
+  <!-- Product Detail Grid -->
+  <div class="product-detail-grid">
+    
+    <!-- Left: Gallery -->
+    <div class="detail-gallery">
+      <div class="main-image-wrap">
+        <img id="main-product-img" src="{{ product.display_image }}" alt="{{ product.name }}">
+      </div>
+
+      <!-- Thumbnail switcher -->
+      <div class="gallery-thumbs">
+        <div class="thumb-item active" data-image="{{ product.display_image }}">
+          <img src="{{ product.display_image }}" alt="{{ product.name }} thumbnail">
+        </div>
+        {% for img in product.gallery_images.all %}
+          <div class="thumb-item" data-image="{{ img.display_image }}">
+            <img src="{{ img.display_image }}" alt="{{ product.name }} gallery">
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Right: Information & Purchase Box -->
+    <div class="detail-info">
+      {% if product.brand %}
+        <div class="detail-brand">{{ product.brand }}</div>
+      {% endif %}
+
+      <h1 class="detail-title">{{ product.name }}</h1>
+
+      <!-- Ratings -->
+      <div class="product-rating" style="margin-bottom: 1.25rem;">
+        <div class="stars" style="font-size: 1rem;">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star-half-stroke"></i>
+        </div>
+        <span class="rating-count" style="font-size: 0.9rem; font-weight: 600;">{{ product.rating }}</span>
+        <span style="color: var(--gray-400);">•</span>
+        <a href="#reviews-tab" onclick="document.querySelector('[data-tab=tab-reviews]').click();" style="color: var(--primary); font-size: 0.85rem; font-weight: 600;">
+          {{ product.reviews_count }} customer review{{ product.reviews_count|pluralize }}
+        </a>
+      </div>
+
+      <!-- Pricing Box -->
+      <div class="detail-price-box">
+        <span class="detail-price">${{ product.price }}</span>
+        {% if product.old_price %}
+          <span class="detail-old-price">${{ product.old_price }}</span>
+          <span class="discount-tag">Save {{ product.discount_percent }}%</span>
+        {% endif %}
+      </div>
+
+      <!-- Stock Availability Status -->
+      <div class="stock-status">
+        {% if product.in_stock %}
+          <i class="fa-solid fa-circle-check" style="color: var(--success);"></i>
+          <span class="in-stock">In Stock ({{ product.stock }} items available)</span>
+        {% else %}
+          <i class="fa-solid fa-circle-xmark" style="color: var(--danger);"></i>
+          <span class="out-of-stock">Currently Out of Stock</span>
+        {% endif %}
+      </div>
+
+      <!-- Short Description -->
+      <p style="color: var(--gray-600); line-height: 1.6; margin-bottom: 1.75rem; font-size: 0.95rem;">
+        {{ product.short_description|default:product.description|truncatewords:35 }}
+      </p>
+
+      <!-- Purchase Form -->
+      {% if product.in_stock %}
+        <form action="{% url 'cart:cart_add' product.id %}" method="POST" class="ajax-add-cart-form">
+          {% csrf_token %}
+          
+          <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <span style="font-size: 0.9rem; font-weight: 600; color: var(--gray-700);">Quantity:</span>
+            <div class="quantity-control">
+              <button type="button" class="qty-btn" id="detail-qty-minus"><i class="fa-solid fa-minus"></i></button>
+              <input type="number" name="quantity" id="detail-qty-input" class="qty-input" value="1" min="1" max="{{ product.stock }}">
+              <button type="button" class="qty-btn" id="detail-qty-plus"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+
+          <div class="detail-actions">
+            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+              <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+            </button>
+          </div>
+        </form>
+      {% endif %}
+
+      <!-- Trust Badges -->
+      <div style="margin-top: 2rem; padding: 1.25rem; background: var(--gray-100); border-radius: var(--radius-md); display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.85rem; color: var(--gray-700);">
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <i class="fa-solid fa-truck" style="color: var(--primary); font-size: 1.1rem;"></i>
+          <span>Free delivery over $50</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <i class="fa-solid fa-rotate-left" style="color: var(--primary); font-size: 1.1rem;"></i>
+          <span>30-Day easy returns</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <i class="fa-solid fa-shield-halved" style="color: var(--primary); font-size: 1.1rem;"></i>
+          <span>2-Year brand warranty</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <i class="fa-solid fa-lock" style="color: var(--primary); font-size: 1.1rem;"></i>
+          <span>100% Encrypted payment</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Detailed Tabs: Description, Specs & Reviews -->
+  <section class="detail-tabs-section" id="reviews-tab">
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="tab-desc">Description</button>
+      <button class="tab-btn" data-tab="tab-specs">Specifications</button>
+      <button class="tab-btn" data-tab="tab-reviews">Customer Reviews ({{ reviews.count }})</button>
+    </div>
+
+    <!-- Tab 1: Description -->
+    <div class="tab-content active" id="tab-desc">
+      <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.75rem;">Product Overview</h3>
+      <p style="color: var(--gray-700); line-height: 1.8; font-size: 0.95rem;">
+        {{ product.description|linebreaks }}
+      </p>
+    </div>
+
+    <!-- Tab 2: Specifications -->
+    <div class="tab-content" id="tab-specs">
+      <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">Technical Details</h3>
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--gray-200);">
+            <td style="padding: 0.75rem 0; font-weight: 600; color: var(--gray-600); width: 220px;">Brand</td>
+            <td style="padding: 0.75rem 0; color: var(--gray-900);">{{ product.brand|default:"ShopSphere Select" }}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--gray-200);">
+            <td style="padding: 0.75rem 0; font-weight: 600; color: var(--gray-600);">Category</td>
+            <td style="padding: 0.75rem 0; color: var(--gray-900);">{{ product.category.name }}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--gray-200);">
+            <td style="padding: 0.75rem 0; font-weight: 600; color: var(--gray-600);">SKU Identifier</td>
+            <td style="padding: 0.75rem 0; color: var(--gray-900);">SPHERE-PROD-{{ product.id }}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--gray-200);">
+            <td style="padding: 0.75rem 0; font-weight: 600; color: var(--gray-600);">Stock Inventory</td>
+            <td style="padding: 0.75rem 0; color: var(--gray-900);">{{ product.stock }} units available</td>
+          </tr>
+          <tr>
+            <td style="padding: 0.75rem 0; font-weight: 600; color: var(--gray-600);">Delivery Standard</td>
+            <td style="padding: 0.75rem 0; color: var(--gray-900);">Dispatches within 24-48 business hours</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tab 3: Reviews -->
+    <div class="tab-content" id="tab-reviews">
+      <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem;">
+        
+        <!-- Reviews List -->
+        <div>
+          <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1.25rem;">
+            Customer Feedback ({{ reviews.count }})
+          </h3>
+          {% if reviews %}
+            {% for review in reviews %}
+              <div class="review-item">
+                <div class="review-header">
+                  <span class="reviewer-name">{{ review.user.first_name|default:review.user.username }}</span>
+                  <span class="review-date">{{ review.created_at|date:"F d, Y" }}</span>
+                </div>
+                <div class="stars" style="font-size: 0.8rem; margin-bottom: 0.5rem;">
+                  {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= review.rating %}
+                      <i class="fa-solid fa-star"></i>
+                    {% else %}
+                      <i class="fa-regular fa-star"></i>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                {% if review.title %}
+                  <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--gray-800); margin-bottom: 0.35rem;">{{ review.title }}</h4>
+                {% endif %}
+                <p style="color: var(--gray-600); font-size: 0.9rem; line-height: 1.6;">{{ review.comment }}</p>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p style="color: var(--gray-500); font-style: italic;">No reviews yet. Be the first to share your thoughts!</p>
+          {% endif %}
+        </div>
+
+        <!-- Add Review Form -->
+        <div style="background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.75rem;">
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1rem;">Leave a Review</h3>
+          
+          {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'store:product_detail' product.slug %}">
+              {% csrf_token %}
+              
+              <div class="form-group">
+                <label class="form-label">Rating</label>
+                <select name="rating" class="form-select" required>
+                  <option value="5">⭐⭐⭐⭐⭐ (5 - Outstanding)</option>
+                  <option value="4">⭐⭐⭐⭐ (4 - Very Good)</option>
+                  <option value="3">⭐⭐⭐ (3 - Average)</option>
+                  <option value="2">⭐⭐ (2 - Below Average)</option>
+                  <option value="1">⭐ (1 - Disappointing)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Headline / Title</label>
+                <input type="text" name="title" class="form-input" placeholder="e.g. Great headphones, superb sound!" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Review Details</label>
+                <textarea name="comment" rows="4" class="form-input" placeholder="What did you like or dislike?" required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">
+                <i class="fa-solid fa-paper-plane"></i> Submit Review
+              </button>
+            </form>
+          {% else %}
+            <div style="text-align: center; padding: 2rem 1rem;">
+              <i class="fa-solid fa-lock" style="font-size: 2rem; color: var(--gray-400); margin-bottom: 0.75rem;"></i>
+              <p style="font-size: 0.9rem; color: var(--gray-600); margin-bottom: 1.25rem;">
+                Please sign in to your ShopSphere account to post a product review.
+              </p>
+              <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn btn-primary btn-sm">
+                Sign In to Review
+              </a>
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Products Section -->
+  {% if related_products %}
+    <section class="section-padding">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Related Items</h2>
+          <p class="section-subtitle">More curated selections from {{ product.category.name }}.</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        {% for rel_prod in related_products %}
+          <div class="product-card">
+            <a href="{{ rel_prod.get_absolute_url }}" class="product-image-wrap">
+              <img src="{{ rel_prod.display_image }}" alt="{{ rel_prod.name }}" loading="lazy">
+            </a>
+            <div class="product-content">
+              <span class="product-category">{{ rel_prod.category.name }}</span>
+              <h3 class="product-title">
+                <a href="{{ rel_prod.get_absolute_url }}">{{ rel_prod.name }}</a>
+              </h3>
+              <div class="product-bottom">
+                <span class="product-price">${{ rel_prod.price }}</span>
+                <form action="{% url 'cart:cart_add' rel_prod.id %}" method="POST" class="ajax-add-cart-form">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-add-cart" title="Add to Cart">
+                    <i class="fa-solid fa-cart-plus"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+</div>
+{% endblock %}
+

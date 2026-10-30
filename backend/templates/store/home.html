@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ShopSphere - Discover Premium Products Everyday{% endblock %}
+
+{% block content %}
+
+<!-- Hero Banner -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-grid">
+      
+      <div>
+        <div class="hero-tag">
+          <i class="fa-solid fa-sparkles"></i> Curated Premium Collection 2026
+        </div>
+        <h1 class="hero-title">
+          Elevate Your Lifestyle With <span>Next-Gen Products</span>
+        </h1>
+        <p class="hero-desc">
+          Explore award-winning electronics, timeless fashion, and minimalist home essentials. Crafted for those who appreciate premium quality and effortless design.
+        </p>
+        <div class="hero-cta">
+          <a href="{% url 'store:product_list' %}" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-bag-shopping"></i> Explore Collection
+          </a>
+          <a href="#featured-products" class="btn btn-outline btn-lg">
+            <i class="fa-solid fa-fire"></i> Featured Deals
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-image-wrap">
+        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80" alt="ShopSphere Luxury Collection" class="hero-image">
+        <div class="hero-floating-badge">
+          <div class="hero-badge-icon">
+            <i class="fa-solid fa-certificate"></i>
+          </div>
+          <div>
+            <div style="font-weight: 800; color: var(--gray-900); font-size: 1rem;">100% Authentic</div>
+            <div style="font-size: 0.8rem; color: var(--gray-500);">Verified brand partners</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Features Strip -->
+<div class="features-strip">
+  <div class="container">
+    <div class="features-grid">
+      
+      <div class="feature-box">
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <div>
+          <div class="feature-title">Free Express Shipping</div>
+          <div class="feature-sub">On all orders over $50.00</div>
+        </div>
+      </div>
+
+      <div class="feature-box">
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <div class="feature-title">Secure Payments</div>
+          <div class="feature-sub">256-bit SSL encrypted checkout</div>
+        </div>
+      </div>
+
+      <div class="feature-box">
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-rotate-left"></i>
+        </div>
+        <div>
+          <div class="feature-title">30-Day Free Returns</div>
+          <div class="feature-sub">Hassle-free refund policy</div>
+        </div>
+      </div>
+
+      <div class="feature-box">
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-headset"></i>
+        </div>
+        <div>
+          <div class="feature-title">24/7 Priority Support</div>
+          <div class="feature-sub">Live assistance anytime</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Product Categories Grid -->
+<section class="section-padding">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Shop by Category</h2>
+        <p class="section-subtitle">Find exactly what you need across our handpicked departments.</p>
+      </div>
+      <a href="{% url 'store:product_list' %}" class="btn btn-outline btn-sm">
+        View All <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="categories-grid">
+      {% for cat in categories %}
+        <a href="{% url 'store:product_list_by_category' cat.slug %}" class="category-card">
+          <div class="category-icon">
+            <i class="fa-solid {{ cat.icon }}"></i>
+          </div>
+          <span class="category-card-name">{{ cat.name }}</span>
+          <span style="font-size: 0.775rem; color: var(--gray-400);">{{ cat.products.count }} items</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="section-padding" id="featured-products" style="background: var(--white); border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200);">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Featured Products</h2>
+        <p class="section-subtitle">Top-rated items loved by thousands of happy customers.</p>
+      </div>
+      <a href="{% url 'store:product_list' %}" class="btn btn-outline btn-sm">
+        Browse Catalog <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="products-grid">
+      {% for product in featured_products %}
+        <div class="product-card">
+          {% if product.badge %}
+            <span class="product-badge {% if 'SALE' in product.badge or '%' in product.badge %}badge-sale{% elif 'HOT' in product.badge %}badge-hot{% elif 'NEW' in product.badge %}badge-new{% else %}badge-popular{% endif %}">
+              {{ product.badge }}
+            </span>
+          {% endif %}
+
+          <a href="{{ product.get_absolute_url }}" class="product-image-wrap">
+            <img src="{{ product.display_image }}" alt="{{ product.name }}" loading="lazy">
+          </a>
+
+          <div class="product-content">
+            <span class="product-category">{{ product.category.name }}</span>
+            <h3 class="product-title">
+              <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+            </h3>
+
+            <div class="product-rating">
+              <div class="stars">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star-half-stroke"></i>
+              </div>
+              <span class="rating-count">({{ product.rating }})</span>
+            </div>
+
+            <div class="product-bottom">
+              <div class="product-price-wrap">
+                <span class="product-price">${{ product.price }}</span>
+                {% if product.old_price %}
+                  <span class="product-old-price">${{ product.old_price }}</span>
+                {% endif %}
+              </div>
+
+              <!-- AJAX Add to Cart Form -->
+              <form action="{% url 'cart:cart_add' product.id %}" method="POST" class="ajax-add-cart-form">
+                {% csrf_token %}
+                <button type="submit" class="btn-add-cart" title="Add to Cart">
+                  <i class="fa-solid fa-cart-plus"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Promotional Deal Banner -->
+<section class="container">
+  <div class="deal-banner">
+    <div>
+      <span class="deal-tag"><i class="fa-solid fa-bolt"></i> LIMITED TIME OFFER</span>
+      <h2 class="deal-title">Save Up to 35% On Premium Noise-Cancelling Audio</h2>
+      <p class="deal-desc">
+        Immerse yourself in crystal acoustics. Equipped with ultra-fast spatial Bluetooth 5.3, ambient transparency, and 45-hour extended battery life.
+      </p>
+      <a href="{% url 'store:product_list_by_category' 'audio-headphones' %}" class="btn btn-accent btn-lg">
+        Claim Offer Now <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+    <div style="text-align: center;">
+      <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=700&q=80" alt="Audio Deal" style="border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); max-height: 280px; width: auto; margin: 0 auto;">
+    </div>
+  </div>
+</section>
+
+<!-- New Arrivals Section -->
+<section class="section-padding">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">New Arrivals</h2>
+        <p class="section-subtitle">Freshly dropped gear and apparel added this week.</p>
+      </div>
+      <a href="{% url 'store:product_list' %}?sort=newest" class="btn btn-outline btn-sm">
+        See All New <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="products-grid">
+      {% for product in new_arrivals %}
+        <div class="product-card">
+          {% if product.badge %}
+            <span class="product-badge badge-new">{{ product.badge }}</span>
+          {% endif %}
+
+          <a href="{{ product.get_absolute_url }}" class="product-image-wrap">
+            <img src="{{ product.display_image }}" alt="{{ product.name }}" loading="lazy">
+          </a>
+
+          <div class="product-content">
+            <span class="product-category">{{ product.category.name }}</span>
+            <h3 class="product-title">
+              <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+            </h3>
+
+            <div class="product-rating">
+              <div class="stars">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <span class="rating-count">({{ product.reviews_count }} reviews)</span>
+            </div>
+
+            <div class="product-bottom">
+              <div class="product-price-wrap">
+                <span class="product-price">${{ product.price }}</span>
+                {% if product.old_price %}
+                  <span class="product-old-price">${{ product.old_price }}</span>
+                {% endif %}
+              </div>
+
+              <!-- AJAX Add to Cart Form -->
+              <form action="{% url 'cart:cart_add' product.id %}" method="POST" class="ajax-add-cart-form">
+                {% csrf_token %}
+                <button type="submit" class="btn-add-cart" title="Add to Cart">
+                  <i class="fa-solid fa-cart-plus"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+

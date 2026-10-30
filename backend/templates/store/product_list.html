@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  {% if category %}{{ category.name }} - ShopSphere{% elif query %}Search: "{{ query }}" - ShopSphere{% else %}All Products - ShopSphere{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  
+  <!-- Breadcrumbs -->
+  <div style="padding: 1.25rem 0 0.5rem; font-size: 0.85rem; color: var(--gray-500); display: flex; align-items: center; gap: 0.5rem;">
+    <a href="{% url 'store:home' %}"><i class="fa-solid fa-house"></i> Home</a>
+    <span>/</span>
+    <a href="{% url 'store:product_list' %}">Catalog</a>
+    {% if category %}
+      <span>/</span>
+      <span style="color: var(--gray-800); font-weight: 600;">{{ category.name }}</span>
+    {% elif query %}
+      <span>/</span>
+      <span style="color: var(--gray-800); font-weight: 600;">Search: "{{ query }}"</span>
+    {% endif %}
+  </div>
+
+  <div class="catalog-layout">
+    
+    <!-- Filter Sidebar -->
+    <aside class="filter-sidebar">
+      <div class="filter-title">
+        <span><i class="fa-solid fa-sliders"></i> Filters</span>
+        {% if category or query or min_price or max_price or min_rating or selected_sort != 'featured' %}
+          <a href="{% url 'store:product_list' %}" style="font-size: 0.775rem; color: var(--danger); font-weight: 600;">Reset All</a>
+        {% endif %}
+      </div>
+
+      <!-- Categories Filter -->
+      <div class="filter-group">
+        <h4 class="filter-group-title">Departments</h4>
+        <ul class="filter-list">
+          <li class="filter-item {% if not category and not selected_category %}active{% endif %}">
+            <a href="{% url 'store:product_list' %}">
+              <span>All Categories</span>
+            </a>
+          </li>
+          {% for cat in categories %}
+            <li class="filter-item {% if category.slug == cat.slug or selected_category == cat.slug %}active{% endif %}">
+              <a href="{% url 'store:product_list_by_category' cat.slug %}">
+                <span>{{ cat.name }}</span>
+                <span style="font-size: 0.75rem; color: var(--gray-400);">{{ cat.products.count }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Price & Rating Filter Form -->
+      <form action="" method="GET">
+        {% if query %}
+          <input type="hidden" name="q" value="{{ query }}">
+        {% endif %}
+        {% if selected_sort %}
+          <input type="hidden" name="sort" value="{{ selected_sort }}">
+        {% endif %}
+        {% if category %}
+          <input type="hidden" name="category" value="{{ category.slug }}">
+        {% endif %}
+
+        <div class="filter-group">
+          <h4 class="filter-group-title">Price Range ($)</h4>
+          <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem;">
+            <input type="number" name="min_price" value="{{ min_price }}" placeholder="Min" class="form-input" style="padding: 0.4rem 0.6rem; font-size: 0.85rem;" min="0">
+            <span style="color: var(--gray-400);">-</span>
+            <input type="number" name="max_price" value="{{ max_price }}" placeholder="Max" class="form-input" style="padding: 0.4rem 0.6rem; font-size: 0.85rem;" min="0">
+          </div>
+          <button type="submit" class="btn btn-outline btn-sm btn-block">Apply Price</button>
+        </div>
+
+        <div class="filter-group">
+          <h4 class="filter-group-title">Customer Rating</h4>
+          <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="radio" name="rating" value="4.5" {% if min_rating == '4.5' %}checked{% endif %} onchange="this.form.submit()">
+              <span class="stars" style="font-size: 0.75rem;">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+              </span>
+              <span>4.5 & up</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="radio" name="rating" value="4.0" {% if min_rating == '4.0' %}checked{% endif %} onchange="this.form.submit()">
+              <span class="stars" style="font-size: 0.75rem;">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+              </span>
+              <span>4.0 & up</span>
+            </label>
+          </div>
+        </div>
+      </form>
+    </aside>
+
+    <!-- Main Catalog Products Area -->
+    <section>
+      
+      <!-- Catalog Header Bar -->
+      <div class="catalog-header">
+        <div>
+          <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--gray-900);">
+            {% if category %}{{ category.name }}{% elif query %}Search Results for "{{ query }}"{% else %}All Products{% endif %}
+          </h1>
+          <span style="font-size: 0.85rem; color: var(--gray-500);">Showing {{ total_count }} item{{ total_count|pluralize }}</span>
+        </div>
+
+        <!-- Sorting Selector Form -->
+        <form method="GET" id="sort-form" style="display: flex; align-items: center; gap: 0.5rem;">
+          {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+          {% if category %}<input type="hidden" name="category" value="{{ category.slug }}">{% endif %}
+          {% if min_price %}<input type="hidden" name="min_price" value="{{ min_price }}">{% endif %}
+          {% if max_price %}<input type="hidden" name="max_price" value="{{ max_price }}">{% endif %}
+          {% if min_rating %}<input type="hidden" name="rating" value="{{ min_rating }}">{% endif %}
+          
+          <label for="sort-select" style="font-size: 0.85rem; color: var(--gray-600); font-weight: 600;">Sort By:</label>
+          <select name="sort" id="sort-select" class="sort-select" onchange="this.form.submit()">
+            <option value="featured" {% if selected_sort == 'featured' %}selected{% endif %}>Featured</option>
+            <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+            <option value="rating" {% if selected_sort == 'rating' %}selected{% endif %}>Highest Rated</option>
+            <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest Arrivals</option>
+          </select>
+        </form>
+      </div>
+
+      <!-- Products Grid -->
+      {% if products %}
+        <div class="products-grid" style="margin-top: 0;">
+          {% for product in products %}
+            <div class="product-card">
+              {% if product.badge %}
+                <span class="product-badge {% if 'SALE' in product.badge or '%' in product.badge %}badge-sale{% elif 'HOT' in product.badge %}badge-hot{% elif 'NEW' in product.badge %}badge-new{% else %}badge-popular{% endif %}">
+                  {{ product.badge }}
+                </span>
+              {% endif %}
+
+              <a href="{{ product.get_absolute_url }}" class="product-image-wrap">
+                <img src="{{ product.display_image }}" alt="{{ product.name }}" loading="lazy">
+              </a>
+
+              <div class="product-content">
+                <span class="product-category">{{ product.category.name }}</span>
+                <h3 class="product-title">
+                  <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                </h3>
+
+                <div class="product-rating">
+                  <div class="stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star-half-stroke"></i>
+                  </div>
+                  <span class="rating-count">({{ product.rating }})</span>
+                </div>
+
+                <div class="product-bottom">
+                  <div class="product-price-wrap">
+                    <span class="product-price">${{ product.price }}</span>
+                    {% if product.old_price %}
+                      <span class="product-old-price">${{ product.old_price }}</span>
+                    {% endif %}
+                  </div>
+
+                  <!-- AJAX Add to Cart Form -->
+                  <form action="{% url 'cart:cart_add' product.id %}" method="POST" class="ajax-add-cart-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-add-cart" title="Add to Cart">
+                      <i class="fa-solid fa-cart-plus"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if products.has_other_pages %}
+          <div class="pagination">
+            {% if products.has_previous %}
+              <a href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}" class="page-btn">
+                <i class="fa-solid fa-chevron-left"></i>
+              </a>
+            {% endif %}
+
+            {% for num in products.paginator.page_range %}
+              {% if products.number == num %}
+                <span class="page-btn active">{{ num }}</span>
+              {% else %}
+                <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}" class="page-btn">{{ num }}</a>
+              {% endif %}
+            {% endfor %}
+
+            {% if products.has_next %}
+              <a href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}" class="page-btn">
+                <i class="fa-solid fa-chevron-right"></i>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+
+      {% else %}
+        <!-- No Products Found State -->
+        <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 4rem 2rem; text-align: center; margin-top: 1rem;">
+          <div style="font-size: 3.5rem; color: var(--gray-300); margin-bottom: 1rem;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--gray-800); margin-bottom: 0.5rem;">No Products Found</h3>
+          <p style="color: var(--gray-500); max-width: 420px; margin: 0 auto 1.5rem; font-size: 0.95rem;">
+            We couldn't find any products matching your active filters. Try adjusting your search query or reset your filters.
+          </p>
+          <a href="{% url 'store:product_list' %}" class="btn btn-primary">
+            <i class="fa-solid fa-rotate-left"></i> View All Products
+          </a>
+        </div>
+      {% endif %}
+
+    </section>
+
+  </div>
+</div>
+{% endblock %}
+

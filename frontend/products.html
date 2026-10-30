@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Catalog | ShopSphere</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="container">
+      <span>🚀 Flash Sale: Use code <span class="highlight">SPHERE20</span> for 20% off all orders over $50! | Free Express Shipping</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-main">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon"><i class="fa-solid fa-shapes"></i></div>
+          <span>Shop<span class="sphere">Sphere</span></span>
+        </a>
+
+        <!-- Search Form -->
+        <div class="header-search">
+          <form action="products.html" method="GET" class="search-form">
+            <select name="category" id="nav-search-category" class="search-category-select">
+              <option value="">All Categories</option>
+            </select>
+            <input type="text" name="q" id="nav-search-q" class="search-input" placeholder="Search for electronics, fashion, headphones..." required>
+            <button type="submit" class="search-btn" title="Search ShopSphere">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- Actions -->
+        <div class="header-actions">
+          <div id="navbar-auth-section">
+            <a href="login.html" class="action-link"><i class="fa-regular fa-user"></i><span>Sign In</span></a>
+          </div>
+          <a href="cart.html" class="action-link" title="Shopping Cart">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="badge-counter cart-badge">0</span>
+          </a>
+          <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Nav Strip -->
+    <nav class="category-nav">
+      <div class="container">
+        <div class="category-nav-inner" id="category-nav-items"></div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+      
+      <!-- Breadcrumbs -->
+      <div style="padding: 1.25rem 0 0.5rem; font-size: 0.85rem; color: var(--gray-500); display: flex; align-items: center; gap: 0.5rem;">
+        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <span>/</span>
+        <span id="breadcrumb-current" style="color: var(--gray-800); font-weight: 600;">All Products</span>
+      </div>
+
+      <div class="catalog-layout">
+        
+        <!-- Filter Sidebar -->
+        <aside class="filter-sidebar">
+          <div class="filter-title">
+            <span><i class="fa-solid fa-sliders"></i> Filters</span>
+            <a href="products.html" style="font-size: 0.775rem; color: var(--danger); font-weight: 600;">Reset</a>
+          </div>
+
+          <!-- Departments -->
+          <div class="filter-group">
+            <h4 class="filter-group-title">Departments</h4>
+            <ul class="filter-list" id="sidebar-categories-list">
+              <!-- Populated via JS -->
+            </ul>
+          </div>
+
+          <!-- Price & Rating Form -->
+          <form id="filter-form">
+            <div class="filter-group">
+              <h4 class="filter-group-title">Price Range ($)</h4>
+              <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem;">
+                <input type="number" id="filter-min-price" placeholder="Min" class="form-input" style="padding: 0.4rem 0.6rem; font-size: 0.85rem;" min="0">
+                <span style="color: var(--gray-400);">-</span>
+                <input type="number" id="filter-max-price" placeholder="Max" class="form-input" style="padding: 0.4rem 0.6rem; font-size: 0.85rem;" min="0">
+              </div>
+              <button type="submit" class="btn btn-outline btn-sm btn-block">Apply Price</button>
+            </div>
+
+            <div class="filter-group">
+              <h4 class="filter-group-title">Customer Rating</h4>
+              <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                  <input type="radio" name="rating-filter" value="4.5">
+                  <span class="stars" style="font-size: 0.75rem;">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                  </span>
+                  <span>4.5 & up</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                  <input type="radio" name="rating-filter" value="4.0">
+                  <span class="stars" style="font-size: 0.75rem;">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+                  </span>
+                  <span>4.0 & up</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                  <input type="radio" name="rating-filter" value="" checked>
+                  <span>Any Rating</span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </aside>
+
+        <!-- Main Products Catalog -->
+        <section>
+          
+          <div class="catalog-header">
+            <div>
+              <h1 id="catalog-heading" style="font-size: 1.5rem; font-weight: 800; color: var(--gray-900);">All Products</h1>
+              <span id="catalog-count" style="font-size: 0.85rem; color: var(--gray-500);">Loading items...</span>
+            </div>
+
+            <!-- Sorting Select -->
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <label for="sort-select" style="font-size: 0.85rem; color: var(--gray-600); font-weight: 600;">Sort By:</label>
+              <select id="sort-select" class="sort-select">
+                <option value="featured">Featured</option>
+                <option value="price_low">Price: Low to High</option>
+                <option value="price_high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+                <option value="newest">Newest Arrivals</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Product Cards Container -->
+          <div id="catalog-products-grid" class="products-grid" style="margin-top: 0;">
+            <!-- Populated via JS -->
+          </div>
+
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>&copy; 2026 ShopSphere Store Inc. All rights reserved.</span>
+        <div style="display: flex; gap: 1.5rem; font-size: 1.25rem; color: #94a3b8;">
+          <i class="fa-brands fa-cc-visa"></i>
+          <i class="fa-brands fa-cc-mastercard"></i>
+          <i class="fa-brands fa-cc-paypal"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const categoryParam = urlParams.get('category') || '';
+      const queryParam = urlParams.get('q') || '';
+      const sortParam = urlParams.get('sort') || 'featured';
+      const minPriceParam = urlParams.get('min_price') || '';
+      const maxPriceParam = urlParams.get('max_price') || '';
+      const ratingParam = urlParams.get('rating') || '';
+
+      if (queryParam) document.getElementById('nav-search-q').value = queryParam;
+      if (minPriceParam) document.getElementById('filter-min-price').value = minPriceParam;
+      if (maxPriceParam) document.getElementById('filter-max-price').value = maxPriceParam;
+      if (sortParam) document.getElementById('sort-select').value = sortParam;
+      if (ratingParam) {
+        const rad = document.querySelector(`input[name="rating-filter"][value="${ratingParam}"]`);
+        if (rad) rad.checked = true;
+      }
+
+      // Load sidebar categories
+      const categories = await API.getCategories();
+      const sidebarCat = document.getElementById('sidebar-categories-list');
+      if (sidebarCat) {
+        sidebarCat.innerHTML = `
+          <li class="filter-item ${!categoryParam ? 'active' : ''}">
+            <a href="products.html"><span>All Categories</span></a>
+          </li>
+          ${categories.map(c => `
+            <li class="filter-item ${categoryParam === c.slug ? 'active' : ''}">
+              <a href="products.html?category=${c.slug}">
+                <span>${c.name}</span>
+                <span style="font-size: 0.75rem; color: var(--gray-400);">${c.products_count || ''}</span>
+              </a>
+            </li>
+          `).join('')}
+        `;
+      }
+
+      // Load products based on query parameters
+      async function loadProducts() {
+        const params = {
+          category: categoryParam,
+          q: queryParam,
+          sort: document.getElementById('sort-select').value,
+          min_price: document.getElementById('filter-min-price').value,
+          max_price: document.getElementById('filter-max-price').value,
+          rating: document.querySelector('input[name="rating-filter"]:checked')?.value || ''
+        };
+
+        const heading = document.getElementById('catalog-heading');
+        const countSpan = document.getElementById('catalog-count');
+        const grid = document.getElementById('catalog-products-grid');
+
+        if (categoryParam) {
+          const matched = categories.find(c => c.slug === categoryParam);
+          heading.textContent = matched ? matched.name : 'Category Products';
+        } else if (queryParam) {
+          heading.textContent = `Search Results for "${queryParam}"`;
+        } else {
+          heading.textContent = 'All Products';
+        }
+
+        const data = await API.getProducts(params);
+        countSpan.textContent = `Showing ${data.count} product${data.count === 1 ? '' : 's'}`;
+
+        if (data.results && data.results.length > 0) {
+          grid.innerHTML = data.results.map(p => renderProductCard(p)).join('');
+        } else {
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 4rem 2rem; text-align: center;">
+              <div style="font-size: 3rem; color: var(--gray-300); margin-bottom: 1rem;"><i class="fa-solid fa-magnifying-glass"></i></div>
+              <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--gray-800); margin-bottom: 0.5rem;">No Products Found</h3>
+              <p style="color: var(--gray-500); max-width: 420px; margin: 0 auto 1.5rem; font-size: 0.95rem;">Try adjusting your search criteria or clear your active price/category filters.</p>
+              <a href="products.html" class="btn btn-primary"><i class="fa-solid fa-rotate-left"></i> Reset Filters</a>
+            </div>
+          `;
+        }
+      }
+
+      document.getElementById('sort-select').addEventListener('change', loadProducts);
+      document.getElementById('filter-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        loadProducts();
+      });
+      document.querySelectorAll('input[name="rating-filter"]').forEach(r => {
+        r.addEventListener('change', loadProducts);
+      });
+
+      loadProducts();
+    });
+  </script>
+</body>
+</html>
+

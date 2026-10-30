@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | ShopSphere</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="container">
+      <span>🚀 Flash Sale: Use code <span class="highlight">SPHERE20</span> for 20% off all orders over $50! | Free Express Shipping</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-main">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon"><i class="fa-solid fa-shapes"></i></div>
+          <span>Shop<span class="sphere">Sphere</span></span>
+        </a>
+        <div class="header-actions" style="margin-left: auto;">
+          <a href="cart.html" class="action-link"><i class="fa-solid fa-bag-shopping"></i> Back to Cart</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container" style="padding-top: 1.5rem; padding-bottom: 3.5rem;">
+      <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 2rem; font-weight: 800; color: var(--gray-900);">Checkout</h1>
+        <span style="color: var(--gray-500); font-size: 0.95rem;">Please provide your shipping and payment information.</span>
+      </div>
+
+      <form id="checkout-form">
+        <div class="checkout-layout">
+          
+          <!-- Left: Shipping & Payment -->
+          <div>
+            
+            <!-- Shipping Information -->
+            <div class="checkout-section">
+              <h2 class="checkout-title"><i class="fa-solid fa-truck-ramp-box"></i> Shipping Address</h2>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">First Name *</label>
+                  <input type="text" id="ship-fname" class="form-input" placeholder="John" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last Name *</label>
+                  <input type="text" id="ship-lname" class="form-input" placeholder="Doe" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Email Address *</label>
+                  <input type="email" id="ship-email" class="form-input" placeholder="john.doe@example.com" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone Number *</label>
+                  <input type="text" id="ship-phone" class="form-input" placeholder="+1 (555) 000-0000" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Street Address *</label>
+                <input type="text" id="ship-address1" class="form-input" placeholder="123 Main Street, Apt 4B" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Apartment, Suite, Unit (Optional)</label>
+                <input type="text" id="ship-address2" class="form-input" placeholder="Suite or Unit #">
+              </div>
+
+              <div class="form-row" style="grid-template-columns: 2fr 1fr 1fr;">
+                <div class="form-group">
+                  <label class="form-label">City *</label>
+                  <input type="text" id="ship-city" class="form-input" placeholder="New York" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">State *</label>
+                  <input type="text" id="ship-state" class="form-input" placeholder="NY" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Postal Code *</label>
+                  <input type="text" id="ship-zip" class="form-input" placeholder="10001" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Country *</label>
+                <input type="text" id="ship-country" class="form-input" value="United States" required>
+              </div>
+            </div>
+
+            <!-- Payment Options -->
+            <div class="checkout-section">
+              <h2 class="checkout-title"><i class="fa-solid fa-credit-card"></i> Payment Method</h2>
+
+              <div class="payment-options-grid">
+                <label class="payment-card-option selected">
+                  <input type="radio" name="payment_method" value="cod" checked style="display: none;">
+                  <i class="fa-solid fa-money-bill-wave"></i>
+                  <span>Cash on Delivery</span>
+                </label>
+
+                <label class="payment-card-option">
+                  <input type="radio" name="payment_method" value="card" style="display: none;">
+                  <i class="fa-regular fa-credit-card"></i>
+                  <span>Credit / Debit Card</span>
+                </label>
+
+                <label class="payment-card-option">
+                  <input type="radio" name="payment_method" value="upi" style="display: none;">
+                  <i class="fa-solid fa-mobile-screen"></i>
+                  <span>UPI / Instant Pay</span>
+                </label>
+              </div>
+
+              <!-- Mock Card Fields -->
+              <div id="card-fields-box" style="display: none; background: var(--gray-50); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200); margin-bottom: 1.25rem;">
+                <div class="form-group">
+                  <label class="form-label">Card Number</label>
+                  <input type="text" placeholder="4532 •••• •••• 8892" class="form-input" maxlength="19">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Expiry (MM/YY)</label>
+                    <input type="text" placeholder="12/28" class="form-input" maxlength="5">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">CVV</label>
+                    <input type="password" placeholder="•••" class="form-input" maxlength="4">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mock UPI Fields -->
+              <div id="upi-fields-box" style="display: none; background: var(--gray-50); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200); margin-bottom: 1.25rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">UPI ID / Virtual Address</label>
+                  <input type="text" placeholder="user@okhdfcbank" class="form-input">
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Special Delivery Instructions (Optional)</label>
+                <textarea id="ship-notes" rows="3" class="form-input" placeholder="e.g. Leave package by side porch"></textarea>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right: Summary Sidebar -->
+          <aside class="order-summary-box">
+            <h3 class="summary-title">Order Items (<span id="checkout-count">0</span>)</h3>
+
+            <div id="checkout-items-list" style="max-height: 280px; overflow-y: auto; margin-bottom: 1.25rem; padding-right: 0.25rem;"></div>
+
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span id="checkout-subtotal" style="font-weight: 700; color: var(--gray-800);">$0.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span id="checkout-shipping" style="font-weight: 700; color: var(--gray-800);">$0.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Estimated Tax (5%)</span>
+              <span id="checkout-tax" style="font-weight: 700; color: var(--gray-800);">$0.00</span>
+            </div>
+            <div class="summary-row total-row">
+              <span>Total To Pay</span>
+              <span id="checkout-total" style="color: var(--primary);">$0.00</span>
+            </div>
+
+            <button type="submit" id="place-order-btn" class="btn btn-primary btn-lg btn-block" style="margin-top: 1.5rem;">
+              <i class="fa-solid fa-shield-check"></i> Place Order Now
+            </button>
+            <p style="text-align: center; color: var(--gray-400); font-size: 0.775rem; margin-top: 1rem;">
+              By placing your order, you agree to ShopSphere's terms of service and return policy.
+            </p>
+          </aside>
+
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const summary = API.getCartSummary();
+      if (summary.items.length === 0) {
+        showToast('Your cart is empty. Please add items before checkout.', 'warning');
+        setTimeout(() => window.location.href = 'products.html', 1000);
+        return;
+      }
+
+      // Pre-fill user data if logged in
+      const user = API.getAuthUser();
+      if (user) {
+        document.getElementById('ship-fname').value = user.first_name || '';
+        document.getElementById('ship-lname').value = user.last_name || '';
+        document.getElementById('ship-email').value = user.email || '';
+        document.getElementById('ship-phone').value = user.phone || '';
+        document.getElementById('ship-address1').value = user.address || '';
+        document.getElementById('ship-city').value = user.city || '';
+        document.getElementById('ship-state').value = user.state || '';
+        document.getElementById('ship-zip').value = user.postal_code || '';
+      }
+
+      // Populate summary
+      document.getElementById('checkout-count').textContent = summary.count;
+      document.getElementById('checkout-subtotal').textContent = `$${summary.subtotal}`;
+      document.getElementById('checkout-shipping').innerHTML = parseFloat(summary.shipping) === 0 ? '<span style="color: var(--success); font-weight: 700;">FREE</span>' : `$${summary.shipping}`;
+      document.getElementById('checkout-tax').textContent = `$${summary.tax}`;
+      document.getElementById('checkout-total').textContent = `$${summary.total}`;
+
+      const itemsList = document.getElementById('checkout-items-list');
+      itemsList.innerHTML = summary.items.map(it => `
+        <div style="display: flex; align-items: center; gap: 0.85rem; padding: 0.65rem 0; border-bottom: 1px solid var(--gray-100);">
+          <img src="${it.image}" alt="${it.name}" style="width: 50px; height: 50px; border-radius: var(--radius-sm); object-fit: cover;">
+          <div style="flex: 1; font-size: 0.85rem;">
+            <div style="font-weight: 700; color: var(--gray-800); line-height: 1.3;">${it.name}</div>
+            <div style="color: var(--gray-500); font-size: 0.785rem;">Qty: ${it.quantity} &times; $${it.price}</div>
+          </div>
+          <div style="font-weight: 700; color: var(--gray-900); font-size: 0.9rem;">
+            $${(parseFloat(it.price) * it.quantity).toFixed(2)}
+          </div>
+        </div>
+      `).join('');
+
+      // Payment options selector
+      const paymentCards = document.querySelectorAll('.payment-card-option');
+      const cardBox = document.getElementById('card-fields-box');
+      const upiBox = document.getElementById('upi-fields-box');
+
+      paymentCards.forEach(card => {
+        card.addEventListener('click', () => {
+          paymentCards.forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          const radio = card.querySelector('input[type="radio"]');
+          radio.checked = true;
+          cardBox.style.display = radio.value === 'card' ? 'block' : 'none';
+          upiBox.style.display = radio.value === 'upi' ? 'block' : 'none';
+        });
+      });
+
+      // Handle checkout submit
+      const form = document.getElementById('checkout-form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('place-order-btn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Order...';
+
+        const shippingData = {
+          first_name: document.getElementById('ship-fname').value,
+          last_name: document.getElementById('ship-lname').value,
+          email: document.getElementById('ship-email').value,
+          phone: document.getElementById('ship-phone').value,
+          address_line1: document.getElementById('ship-address1').value,
+          address_line2: document.getElementById('ship-address2').value,
+          city: document.getElementById('ship-city').value,
+          state: document.getElementById('ship-state').value,
+          postal_code: document.getElementById('ship-zip').value,
+          country: document.getElementById('ship-country').value,
+          payment_method: document.querySelector('input[name="payment_method"]:checked').value,
+          order_notes: document.getElementById('ship-notes').value
+        };
+
+        try {
+          const res = await API.checkout(shippingData);
+          showToast('Order placed successfully!', 'success');
+          setTimeout(() => {
+            window.location.href = `order-confirmation.html?order=${res.order_number}`;
+          }, 800);
+        } catch (err) {
+          showToast(err.message || 'Error completing checkout', 'danger');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-shield-check"></i> Place Order Now';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

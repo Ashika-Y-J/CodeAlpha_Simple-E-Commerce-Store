@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart | ShopSphere{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 1.5rem; padding-bottom: 3.5rem;">
+  
+  <div style="margin-bottom: 2rem;">
+    <h1 style="font-size: 2rem; font-weight: 800; color: var(--gray-900);">Shopping Cart</h1>
+    <span style="color: var(--gray-500); font-size: 0.95rem;">Review your selected items before checking out.</span>
+  </div>
+
+  {% if cart %}
+    <div class="cart-layout">
+      
+      <!-- Cart Table Card -->
+      <div class="cart-card">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th style="width: 45%;">Product</th>
+              <th style="width: 15%;">Price</th>
+              <th style="width: 20%;">Quantity</th>
+              <th style="width: 15%;">Subtotal</th>
+              <th style="width: 5%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart %}
+              <tr id="cart-row-{{ item.product.id }}">
+                <td>
+                  <div class="cart-product">
+                    <img src="{{ item.product.display_image }}" alt="{{ item.product.name }}" class="cart-thumb">
+                    <div>
+                      <span class="cart-product-cat">{{ item.product.category.name }}</span>
+                      <h4 class="cart-product-title">
+                        <a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+                      </h4>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-weight: 600; color: var(--gray-800);">${{ item.price }}</span>
+                </td>
+                <td>
+                  <!-- Interactive +/- Qty Controls -->
+                  <div class="quantity-control">
+                    <button type="button" class="qty-btn cart-qty-btn" data-action="decrease" data-product-id="{{ item.product.id }}" title="Decrease quantity">
+                      <i class="fa-solid fa-minus" style="font-size: 0.75rem;"></i>
+                    </button>
+                    <span class="cart-qty-val" style="width: 36px; text-align: center; font-weight: 700; font-size: 0.9rem;">{{ item.quantity }}</span>
+                    <button type="button" class="qty-btn cart-qty-btn" data-action="increase" data-product-id="{{ item.product.id }}" title="Increase quantity">
+                      <i class="fa-solid fa-plus" style="font-size: 0.75rem;"></i>
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  <span class="cart-item-total" style="font-weight: 800; color: var(--gray-900); font-size: 1.05rem;">${{ item.total_price }}</span>
+                </td>
+                <td>
+                  <button type="button" class="cart-remove-btn" data-product-id="{{ item.product.id }}" title="Remove item">
+                    <i class="fa-regular fa-trash-can"></i>
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- Cart Table Bottom Actions -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200); flex-wrap: wrap; gap: 1rem;">
+          <a href="{% url 'store:product_list' %}" class="btn btn-outline">
+            <i class="fa-solid fa-arrow-left"></i> Continue Shopping
+          </a>
+          <a href="{% url 'cart:cart_clear' %}" class="btn btn-outline" style="color: var(--danger); border-color: var(--danger-light);" onclick="return confirm('Are you sure you want to empty your entire cart?');">
+            <i class="fa-solid fa-trash"></i> Clear Cart
+          </a>
+        </div>
+      </div>
+
+      <!-- Order Summary Card -->
+      <aside class="order-summary-box">
+        <h3 class="summary-title">Order Summary</h3>
+
+        <div class="summary-row">
+          <span>Items Subtotal</span>
+          <span id="summary-subtotal" style="font-weight: 700; color: var(--gray-800);">${{ subtotal }}</span>
+        </div>
+
+        <div class="summary-row">
+          <span>Estimated Shipping</span>
+          <span id="summary-shipping" style="font-weight: 700; color: var(--gray-800);">
+            {% if shipping == 0 %}
+              <span style="color: var(--success); font-weight: 700;">FREE</span>
+            {% else %}
+              ${{ shipping }}
+            {% endif %}
+          </span>
+        </div>
+
+        <div class="summary-row">
+          <span>Estimated Tax (5%)</span>
+          <span id="summary-tax" style="font-weight: 700; color: var(--gray-800);">${{ tax }}</span>
+        </div>
+
+        <div class="summary-row total-row">
+          <span>Grand Total</span>
+          <span id="summary-total" style="color: var(--primary);">${{ total }}</span>
+        </div>
+
+        <!-- Shipping Incentive Notice -->
+        {% if subtotal < 50 %}
+          <div style="background: var(--accent-light); color: #92400e; padding: 0.65rem 0.85rem; border-radius: var(--radius-md); font-size: 0.8rem; margin: 1.25rem 0; font-weight: 500;">
+            <i class="fa-solid fa-truck-fast"></i> Add items worth <strong>${{ 50|floatformat:2 }}</strong> or more for <strong>FREE shipping</strong>!
+          </div>
+        {% else %}
+          <div style="background: var(--success-light); color: #065f46; padding: 0.65rem 0.85rem; border-radius: var(--radius-md); font-size: 0.8rem; margin: 1.25rem 0; font-weight: 500;">
+            <i class="fa-solid fa-circle-check"></i> You have unlocked <strong>Free Express Shipping</strong>!
+          </div>
+        {% endif %}
+
+        <!-- Checkout Action Button -->
+        <a href="{% url 'orders:checkout' %}" class="btn btn-primary btn-lg btn-block" style="margin-top: 1.25rem;">
+          Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+        <!-- Security Guarantee -->
+        <div style="text-align: center; margin-top: 1.5rem; color: var(--gray-500); font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          <i class="fa-solid fa-lock" style="color: var(--success);"></i> Safe & Encrypted 256-Bit Checkout
+        </div>
+      </aside>
+
+    </div>
+
+  {% else %}
+    <!-- Empty Cart State -->
+    <div style="background: var(--white); border-radius: var(--radius-xl); border: 1px solid var(--gray-200); padding: 5rem 2rem; text-align: center; max-width: 650px; margin: 2rem auto; box-shadow: var(--shadow-sm);">
+      <div style="width: 90px; height: 90px; background: var(--primary-light); color: var(--primary); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-size: 2.75rem; margin: 0 auto 1.5rem;">
+        <i class="fa-solid fa-bag-shopping"></i>
+      </div>
+      <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--gray-900); margin-bottom: 0.5rem;">Your Cart is Empty</h2>
+      <p style="color: var(--gray-500); max-width: 380px; margin: 0 auto 1.75rem; font-size: 0.95rem; line-height: 1.6;">
+        Looks like you haven't added any products to your bag yet. Explore our top curated selections!
+      </p>
+      <a href="{% url 'store:product_list' %}" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-arrow-left"></i> Start Shopping Now
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+

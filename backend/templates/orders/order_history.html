@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Orders | ShopSphere{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+  
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h1 style="font-size: 2rem; font-weight: 800; color: var(--gray-900);">Order History</h1>
+      <span style="color: var(--gray-500); font-size: 0.95rem;">Track and review all purchases associated with your account.</span>
+    </div>
+    <a href="{% url 'accounts:profile' %}" class="btn btn-outline btn-sm">
+      <i class="fa-regular fa-user"></i> Back to Profile
+    </a>
+  </div>
+
+  {% if orders %}
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      {% for ord in orders %}
+        <div style="background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; transition: var(--transition); box-shadow: var(--shadow-sm);">
+          
+          <!-- Order Card Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gray-100); padding-bottom: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+              <span style="font-size: 0.8rem; color: var(--gray-400); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Order Placed</span>
+              <div style="font-weight: 700; color: var(--gray-800); font-size: 0.95rem;">{{ ord.created_at|date:"M d, Y" }}</div>
+            </div>
+            
+            <div>
+              <span style="font-size: 0.8rem; color: var(--gray-400); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Order Number</span>
+              <div style="font-weight: 700; color: var(--primary); font-size: 0.95rem;">#{{ ord.order_number }}</div>
+            </div>
+
+            <div>
+              <span style="font-size: 0.8rem; color: var(--gray-400); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Total Amount</span>
+              <div style="font-weight: 800; color: var(--gray-900); font-size: 1.1rem;">${{ ord.total_amount }}</div>
+            </div>
+
+            <div>
+              <span style="font-size: 0.8rem; color: var(--gray-400); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Status</span>
+              <div>
+                <span style="display: inline-block; padding: 0.2rem 0.75rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 700; background: {% if ord.order_status == 'Delivered' %}var(--success-light); color: #065f46;{% else %}var(--primary-light); color: var(--primary);{% endif %}">
+                  {{ ord.order_status }}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <a href="{% url 'orders:order_detail' ord.order_number %}" class="btn btn-outline btn-sm">
+                View Details <i class="fa-solid fa-chevron-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Items Row -->
+          <div style="display: flex; gap: 1rem; overflow-x: auto; padding-top: 0.25rem;">
+            {% for item in ord.items.all %}
+              <div style="display: flex; align-items: center; gap: 0.75rem; background: var(--gray-50); padding: 0.5rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200); min-width: 200px;">
+                {% if item.product_image %}
+                  <img src="{{ item.product_image }}" alt="{{ item.product_name }}" style="width: 44px; height: 44px; border-radius: var(--radius-sm); object-fit: cover;">
+                {% endif %}
+                <div style="font-size: 0.825rem;">
+                  <div style="font-weight: 700; color: var(--gray-800); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
+                    {{ item.product_name }}
+                  </div>
+                  <div style="color: var(--gray-500);">Qty: {{ item.quantity }} &times; ${{ item.price }}</div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 4rem 2rem; text-align: center;">
+      <i class="fa-solid fa-box-open" style="font-size: 3rem; color: var(--gray-300); margin-bottom: 1rem;"></i>
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--gray-800); margin-bottom: 0.5rem;">No Orders Yet</h3>
+      <p style="color: var(--gray-500); font-size: 0.95rem; margin-bottom: 1.5rem;">
+        You haven't placed any orders with ShopSphere yet.
+      </p>
+      <a href="{% url 'store:product_list' %}" class="btn btn-primary">
+        Start Shopping Now
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
